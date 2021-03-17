@@ -202,6 +202,46 @@ input::placeholder {
     padding: 0.2rem;
 }
 
+.controlPanel {
+    width: 100%;
+    height: 50rem;
+    border: solid #8d8d8d 2px;
+    margin: 1.5rem 1.5rem 3rem 1.5rem;
+    border-radius: 0.3rem;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    overflow: hidden;
+}
+
+.linksContainer {
+    overflow: auto;
+    margin: 0 0.2rem 0.2rem 0;
+    width: 100%;
+    height: 100%;
+    border-right: solid #8d8d8d 2px;
+    padding: 0 0.2rem 0.2rem 0;
+}
+
+.oneLink {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem;
+    border-bottom: solid #8d8d8d 1px;
+    width: 100%;
+    overflow: hidden;
+}
+.oneLink > div {
+    padding: 0.1rem;
+}
+
+.fullLinkInfo {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    margin: 0 0.2rem 0.2rem 0;
+    padding: 0.2rem
+}
+
 .buttonMainForm {
     display: inline-block;
     padding: 0.5em;

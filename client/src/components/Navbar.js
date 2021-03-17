@@ -17,7 +17,7 @@ export const Navbar = () => {
         return (
             <header>
                 <nav style={{background: "#2B8DFF"}}>
-                    <div className="nav-wrapper">
+                    <div className="nav-wrapper container">
                         <img className="brand-logo logo" src="/system/img/Swappybw.svg" alt="Swappy"/>
                         <ul id="nav-mobile" className="right hide-on-med-and-down">
                             <li>
@@ -65,7 +65,7 @@ export const Navbar = () => {
     return (
         <header>
             <nav style={{background: "#2B8DFF"}}>
-                <div className="nav-wrapper">
+                <div className="nav-wrapper container">
                     <img className="brand-logo logo" src="/system/img/Swappybw.svg" alt="Swappy"/>
                     <ul id="nav-mobile" className="right hide-on-med-and-down">
                         <li>

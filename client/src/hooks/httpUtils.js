@@ -15,12 +15,12 @@ export const useHttp = () => {
             const response = await fetch(url, {method, body, headers})
             const data = await response.json()
 
-            if (!response.ok) {
+            if (!response.ok && response.status!==401) {
                 throw new Error(data.message || 'Ошибка отправки данных на сервер')
             }
 
             setLoading(false)
-
+            data.statusCode = response.status
             return data
         } catch (e) {
             setLoading(false)

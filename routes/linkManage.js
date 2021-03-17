@@ -10,7 +10,7 @@ const allowedUrls = /^[\/a-zA-Z0-9_\-%]{1,200}$/
 module.exports = router
 
 
-// /system/link/
+// /system/link/create
 router.post(
     '/create',
     auth,

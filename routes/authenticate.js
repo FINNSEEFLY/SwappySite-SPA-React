@@ -94,7 +94,7 @@ router.post(
                 config.get('jwtSecret'),
                 {expiresIn: '1h'}
             )
-            res.json({token, userId: getUserResult.result.userId})
+            res.json({token})
         } catch (e) {
             res.status(500).json({message: "Внутренняя ошибка сервера при регистрации"})
         }

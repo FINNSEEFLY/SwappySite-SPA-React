@@ -2,11 +2,13 @@ import React, {useContext, useEffect, useState} from 'react'
 import {AuthContext} from "../context/AuthContext";
 import {useMessage} from "../hooks/materialToast";
 import {useHttp} from "../hooks/httpUtils";
+import {useHistory} from "react-router-dom";
 
 export const CreateLinksPage = () => {
     document.title = 'Создать ссылку';
     const auth = useContext(AuthContext)
     const message = useMessage()
+    const history = useHistory()
     const {loading, request, error, clearError} = useHttp()
     const [form, setForm] = useState({
         longUrl: '',
@@ -65,6 +67,10 @@ export const CreateLinksPage = () => {
             if (!abort) {
                 const data = await request("/system/link/create", "POST", body,
                     {Authorization: `Bearer ${auth.token}`})
+                if (data.statusCode ===401) {
+                    auth.logout()
+                    history.push("/system/login")
+                }
                 message(data.message)
             }
         } catch (e) {
