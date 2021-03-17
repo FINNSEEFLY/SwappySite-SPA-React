@@ -1,0 +1,288 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-style: normal;
+    font-family: "Open Sans", serif;
+}
+
+.grid {
+    display: grid;
+    grid-template-rows: auto auto auto;
+}
+
+header {
+    display: block;
+    z-index: 1;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0 10px gray;
+    background: #2b8dff;
+}
+
+.linkWrapper {
+    display: table;
+    padding: 0.5rem;
+    margin: 1.2rem 2rem;
+}
+
+.buttonNav {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition-property: background-color, color;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: ease;
+}
+
+.buttonNav:hover {
+    background-color: #0076ff;
+}
+
+
+.redButton {
+    background: #fa6565;
+    color: white;
+}
+
+.greenButton {
+    background: #1ec770;
+    color: white;
+}
+
+.buttonNav:link, .buttonNav:visited, .buttonNav, .buttonNav:active {
+    text-decoration: none;
+}
+
+
+.logo {
+    height: 3rem;
+    width: 12rem;
+    background: #2B8DFF;
+    margin: 0.5rem 3rem
+
+}
+
+.content {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
+.largeBanner {
+    height: auto;
+    border-radius: 0 0 1.2rem 1.2rem;
+    box-shadow: 0 5px 15px lightgray;
+}
+
+#CutItSwappyMessage {
+    background: #cee3ff;
+}
+
+.bannerMessage {
+    color: #3c3c3c;
+    font-weight: bolder;
+    text-shadow: #b5b5b5 1px 1px 1px;
+}
+
+#bannerMainMessage {
+    font-size: 4rem;
+}
+
+#bannerOtherMessage {
+    font-size: 1.5rem;
+}
+
+.largeBannerContainer {
+    margin: 8em 0;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+    font-family: "Montserrat", serif;
+    text-align: center;
+}
+
+.largeBannerContainer > * {
+    margin: 0.2em 0;
+}
+
+#wannaMore {
+    background: #cee3ff;
+    border-radius: 1em;
+}
+
+#wannaMoreFirst {
+    font-size: 4rem;
+}
+
+#wannaMoreSecond {
+    font-size: 1.5rem;
+}
+
+.flexRowContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flexRowDownSideIndex {
+    flex-shrink: 1;
+}
+
+footer {
+    display: block;
+    width: 100%;
+    /*    position: fixed;*/
+    bottom: 0;
+    background: #cfcece;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: #b5b5b5 1px 1px 1px;
+    color: #3C3C3C;
+    padding: 0.5em 0;
+    min-height: calc(3vh);
+}
+
+.linkCutter {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2em 0;
+}
+
+#headerPromptUrl {
+    font-size: 2em;
+}
+
+.inputForm {
+    border-style: solid;
+    border-radius: 1.2rem;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    border-color: #989898;
+    width: 50%;
+    outline: none;
+}
+
+.AuthBox {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2em 0;
+}
+
+input::placeholder {
+    color: #8f8f8f;
+    font-weight: bold;
+}
+
+.AuthForm {
+    height: 42rem;
+}
+
+.inputForUrl {
+    border-radius: 0.5rem;
+    border-style: solid;
+    border-color: #cbcbcb;
+    background: #e2e2e2;
+    font-size: 1.5rem;
+    margin: 1rem 0.5rem;
+    width: 70%;
+    padding: 0.2rem;
+}
+
+.buttonMainForm {
+    display: inline-block;
+    padding: 0.5em;
+    font-size: 1em;
+    width: 9em;
+    border-radius: 1.5rem;
+    border-style: solid;
+    border-width: 0.2rem;
+    border-color: #0076ff;
+    background: #0076ff;
+    color: white;
+    font-weight: bold;
+    transition-property: background-color, color;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: ease;
+}
+
+.buttonForm {
+    display: inline-block;
+    padding: 0.5em;
+    font-size: 1em;
+    width: 100%;
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 0.2rem;
+    border-color: #0076ff;
+    background: #0076ff;
+    color: white;
+    font-weight: bold;
+    transition-property: background-color, color;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: ease;
+}
+
+.buttonMainForm:hover, .buttonForm:hover {
+    background-color: white;
+    color: #0076ff;
+    cursor: pointer;
+}
+
+.buttonMainForm:disabled, .buttonForm:disabled {
+    background-color: #c1c1c1;
+    border-color: #c1c1c1;
+    color: #7a7a7a;
+    cursor: default;
+}
+
+.inputForm *:focus {
+    outline: none;
+}
+
+.labelBeforeInputUrl {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #262626;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+.bolder {
+    font-family: "Open Sans Bold", serif;
+    font-weight: bold;
+    color: black;
+}
+
+/* полоса прокрутки (скроллбар) */
+::-webkit-scrollbar {
+    width: 8px; /* ширина для вертикального скролла */
+    height: 8px; /* высота для горизонтального скролла */
+    background-color: #8d8d8d;
+}
+
+/* ползунок скроллбара */
+::-webkit-scrollbar-thumb {
+    background-color: #0076ff;
+    border-radius: 12em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #1e39a0;
+}
+

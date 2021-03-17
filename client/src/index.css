@@ -1,0 +1,18 @@
+@import "~materialize-css";
+
+input.blue-input {
+    border-bottom: 1px solid #373737 !important;
+}
+
+input.blue-input + label {
+    color: #373737 !important;
+}
+
+input.blue-input:focus + label {
+    color: #2b8dff !important;
+}
+
+input.blue-input:focus {
+    border-bottom: 1px solid #2b8dff !important;
+}
+

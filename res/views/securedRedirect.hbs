@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru-ru">
+{{>defaulthead}}
+<body>
+<script>
+    let analyticsInfo = {
+    url_from: window.location.pathname,
+    url_referrer: document.referrer,
+    platform: navigator.platform,
+    screen_width: screen.width,
+    screen_height: screen.height,
+}
+    fetch(`/system/sendStatsInfo`, {
+    method: "POST",
+    body: JSON.stringify(analyticsInfo),
+    headers: {'Content-Type': 'application/json'}
+})
+    document.location.href = `{{{next_link}}}`;
+</script>
+</body>
+</html>

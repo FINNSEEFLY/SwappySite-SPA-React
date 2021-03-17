@@ -1,0 +1,13 @@
+<head>
+    <meta charSet="UTF-8">
+    <meta name="css/author" content="FINNSEEFLY">
+    <meta name="viewport" content="width=device-width"/>
+    <link href="/system/styles/global.css" rel="stylesheet" type="text/css"/>
+    <link href="/system/styles/fontDeclaration.css" rel="stylesheet" type="text/css"/>
+    {{#if scripts}}
+        {{#each scripts}}
+            <script src={{{this}}}></script>
+        {{/each}}
+    {{/if}}
+    <title>{{title}}</title>
+</head>

@@ -1,0 +1,12 @@
+{
+  "port": 80,
+  "mySqlConfig": {
+    "connectionLimit": 8,
+    "host": "localhost",
+    "user": "root",
+    "password": "1337420",
+    "database": "swappydb"
+  },
+  "jwtSecret": "Pattern Matching Successfully Failed",
+  "swappyUserId": 1
+}

@@ -1,0 +1,151 @@
+/* Open Sans */
+@font-face {
+    font-family: "Open Sans";
+    src: url("/system/fonts/Open_Sans/OpenSans-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url("/system/fonts/Open_Sans/OpenSans-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Open Sans Bold";
+    src: url("/system/fonts/Open_Sans/OpenSans-ExtraBold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url("/system/fonts/Open_Sans/OpenSans-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url("/system/fonts/Open_Sans/OpenSans-Italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Lato */
+@font-face {
+    font-family: "Lato";
+    src: url("/system/fonts/Lato/Lato-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("/system/fonts/Lato/Lato-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("/system/fonts/Lato/Lato-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("/system/fonts/Lato/Lato-Italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Montserrat */
+@font-face {
+    font-family: "Montserrat";
+    src: url("/system/fonts/Montserrat/Montserrat-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("/system/fonts/Montserrat/Montserrat-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("/system/fonts/Montserrat/Montserrat-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("/system/fonts/Montserrat/Montserrat-Italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Poppins */
+@font-face {
+    font-family: "Poppins";
+    src: url("/system/fonts/Poppins/Poppins-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/system/fonts/Poppins/Poppins-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/system/fonts/Poppins/Poppins-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/system/fonts/Poppins/Poppins-Italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Roboto */
+@font-face {
+    font-family: "Roboto";
+    src: url("/system/fonts/Roboto/Roboto-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/system/fonts/Roboto/Roboto-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/system/fonts/Roboto/Roboto-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/system/fonts/Roboto/Roboto-Italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+}
