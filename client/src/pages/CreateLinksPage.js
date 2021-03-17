@@ -28,7 +28,7 @@ export const CreateLinksPage = () => {
 
 
 
-    async function createShortLinkButtonClickHandler(event) {
+    async function createShortLinkButtonClickHandler() {
         try {
             let body = {}
             let abort = false;
@@ -62,12 +62,11 @@ export const CreateLinksPage = () => {
             } else if (flags.hasDisabledOnDateTime) {
                 body.disabledOnDateTime = form.disabledOnDateTime
             }
-
-
-
-            const data = await request("/system/link/create", "POST", body,
-                {Authorization: `Bearer ${auth.token}`})
-            message(data.message)
+            if (!abort) {
+                const data = await request("/system/link/create", "POST", body,
+                    {Authorization: `Bearer ${auth.token}`})
+                message(data.message)
+            }
         } catch (e) {
         }
     }

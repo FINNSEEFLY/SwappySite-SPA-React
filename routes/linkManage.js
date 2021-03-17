@@ -1,10 +1,8 @@
 const {Router} = require('express')
-const config = require('config')
 const auth = require('../middleware/auth')
 const {insertLinkAndRules} = require("../models/Link");
-const {insertLink, getShortLinkId} = require("../models/Link");
-const {convertUTCTimeToMySqlDateTime} = require('../utils/convertUTCTimeToMySqlDateTime')
-
+const {getShortLinkId} = require("../models/Link");
+const bcrypt = require('bcryptjs')
 const router = Router()
 const systemRegExp = /^((\/)?system)/
 const allowedUrls = /^[\/a-zA-Z0-9_\-%]{1,200}$/
@@ -19,14 +17,6 @@ router.post(
     async (req, res) => {
         try {
             let {longUrl, shortUrl, password, clickLimit, disabledOnDateTime} = req.body
-            /*        console.log(`
-                        longUrl=${longUrl}
-                        shortUrl=${shortUrl}
-                        password=${password}
-                        clickLimit=${clickLimit}
-                        disabledOnDateTime=${disabledOnDateTime}
-                    `)
-                    console.log(convertUTCTimeToMySqlDateTime(disabledOnDateTime))*/
             if (systemRegExp.test(shortUrl)) {
                 res.status(406).json({message: "Недопустимая ссылка /system зарезервирован"})
                 return
@@ -42,6 +32,10 @@ router.post(
             if (password!==undefined && password==='') {
                 res.status(406).json({message: "Заполните пароль"})
                 return
+            } else {
+                if (password!==undefined) {
+                    password = await bcrypt.hash(password, 10)
+                }
             }
             if (clickLimit!==undefined && clickLimit<0) {
                 res.status(406).json({message: "Ограничение кликов должно быть положительным"})

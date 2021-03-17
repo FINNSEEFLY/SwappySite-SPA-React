@@ -5,6 +5,7 @@ const hbs = require("hbs");
 const expressHbs = require("express-handlebars");
 const {routeSomeLink} = require("./models/Link");
 const path = require('path')
+const {authLinkAccess} = require("./models/Link");
 const {receiveStatistics} = require("./models/Link");
 
 const app = express()
@@ -21,11 +22,11 @@ app.engine("hbs", expressHbs(
     }
 ))
 
-app.use(express.json({ extended: true }))
+app.use(express.json({extended: true}))
 
-app.use('/system/auth/',require('./routes/authenticate'))
+app.use('/system/auth/', require('./routes/authenticate'))
 
-app.use('/system/link/',require('./routes/linkManage'))
+app.use('/system/link/', require('./routes/linkManage'))
 
 // Static Files Delivery
 app.use('/system/styles', express.static(`${__dirname}/res/css`));
@@ -35,24 +36,29 @@ app.use('/system/scripts', express.static(`${__dirname}/res/scripts`));
 
 async function start() {
     try {
-        app.listen(PORT,()=> console.log(`Server has been started on port ${PORT}`))
-    }
-    catch (e) {
+        app.listen(PORT, () => console.log(`Server has been started on port ${PORT}`))
+    } catch (e) {
         console.log(`Server Error(start): ${e.message}`)
         process.exit(1)
     }
 }
+
 // Random Link Requests
-app.post("/system/randomShortLinkModel",  makeRandomShortLink)
+app.post("/system/randomShortLinkModel", makeRandomShortLink)
 
 // Receiving Stats
 app.post("/system/sendStatsInfo", receiveStatistics);
 
+//Manage Pass Redirect
+app.post("/system/sendPasswordToRedirect",authLinkAccess)
+
 app.use('/', express.static(path.join(__dirname, 'client', 'build')))
-app.get('(/system/register)|(/system/login/)|(/system/myLinks)', (req, res) => {
+app.get('(/system/register)|(/system/login/)|(/system/myLinks)|(/system/createLinks)', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
+
 // Managed Links Routing
 app.use(routeSomeLink);
+
 
 start();

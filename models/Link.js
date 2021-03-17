@@ -2,6 +2,7 @@ const {getRandomString} = require("../utils/randomStringMaker")
 const {mySqlConnectionPool} = require("./MySqlPull")
 const {getDateTimeNow} = require("../utils/datetimeNow")
 const config = require('config')
+const bcrypt = require('bcryptjs')
 const {compareMySqlDateAndNow} = require("../utils/compareMySqlDateAndNow");
 const {convertUTCTimeToMySqlDateTime} = require("../utils/convertUTCTimeToMySqlDateTime");
 
@@ -128,9 +129,7 @@ async function getActiveRulesByShortLinkId(id) {
 
 async function updateRuleParam(id, param) {
     try {
-        let result = {result: [], message: ""}
-        await mySqlConnectionPool.execute(REQUEST_UPDATE_RULE_PARAM, [param,id])
-
+        await mySqlConnectionPool.execute(REQUEST_UPDATE_RULE_PARAM, [param, id])
     } catch (e) {
         console.log(`Error in (updateRuleParam: id=${id}, param=${param};\nMessage:${e.message}`)
         throw e
@@ -158,11 +157,11 @@ async function routeSomeLink(req, res) {
         for (let rule of rules) {
             switch (rule.name) {
                 case 'clicks-before-disabling':
-                    if (rule.param<=0) {
+                    if (rule.param <= 0) {
                         res.redirect("/")
                         return
                     } else {
-                        await updateRuleParam(rule.id, rule.param-1)
+                        await updateRuleParam(rule.id, rule.param - 1)
                     }
                     break
                 case 'will-be-disabled-on-datetime':
@@ -181,13 +180,49 @@ async function routeSomeLink(req, res) {
                 layout: false,
                 next_link: longLinks.pop().link,
             })
-            return;
+            return
+        } else {
+            res.render("passRedirect", {layout: false, title: "Введите пароль"})
+            return
         }
-        res.status(200).json({message: "В разработке =)"})
+/*        res.status(200).json({message: "В разработке =)"})*/
     } catch (e) {
         return res.status(500).json({message: `Внутренняя ошибка сервера при поиске ссылки ${e.stackTrace}`})
     }
+}
 
+async function authLinkAccess(req, res) {
+    try {
+        let {shortUrl, password} = req.body
+        if (shortUrl === undefined || password === undefined) {
+            res.sendStatus(401)
+            return
+        }
+        shortUrl = shortUrl.replace("/", "")
+        const data = await getShortLinkId(shortUrl)
+        if (data.result == null) {
+            res.sendStatus(404)
+            return
+        }
+        const rules = await getActiveRulesByShortLinkId(data.result)
+        if (rules.result.isEmpty) {
+            res.sendStatus(404)
+            return
+        }
+        let passwordRule = rules.result.find(x => x.name === "password-required")
+        if (!await bcrypt.compare(password, passwordRule.param)) {
+            res.sendStatus(401);
+            return
+        }
+        let longLinkResult = await getLongLinksByShortLinkId(data.result)
+        if (longLinkResult.result.isEmpty) {
+            res.sendStatus(404)
+            return
+        }
+        res.json({link: longLinkResult.result.pop().link})
+    } catch (e) {
+        return res.status(500).json({message: `Внутренняя ошибка сервера при обработке пароля ${e.stackTrace}`})
+    }
 }
 
 async function receiveStatistics(req, res) {
@@ -300,6 +335,7 @@ async function insertLinkAndRules(shortLink, longLink, userId, rules) {
 
 }
 
+module.exports.authLinkAccess = authLinkAccess
 module.exports.insertLinkAndRules = insertLinkAndRules
 module.exports.insertLink = insertLink
 module.exports.receiveStatistics = receiveStatistics

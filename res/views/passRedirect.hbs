@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru-ru">
+{{>defaulthead}}
+<body>
+<script>
+    let analyticsInfo = {
+        url_from: window.location.pathname,
+        url_referrer: document.referrer,
+        platform: navigator.platform,
+        screen_width: screen.width,
+        screen_height: screen.height,
+    }
+
+    async function tryToRedirect() {
+        let input = document.getElementById('passwordForm');
+        try {
+            let result = await fetch('/system/sendPasswordToRedirect', {
+                method: "POST",
+                body: JSON.stringify({
+                    shortUrl: window.location.pathname,
+                    password: input.value
+                }),
+                headers: {'Content-Type': 'application/json'}
+            })
+            result = await result.json()
+            if (result.link) {
+                await fetch(`/system/sendStatsInfo`, {
+                    method: "POST",
+                    body: JSON.stringify(analyticsInfo),
+                    headers: {'Content-Type': 'application/json'}
+                })
+                document.location.href = result.link
+            }
+        }
+        catch (e) {
+            input.value = ""
+        }
+
+    }
+
+    function clickHandler() {
+        tryToRedirect()
+    }
+</script>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+    <div class="inputForm" style="align-items: center; justify-content: center">
+        <h1>Введите пароль для доступа</h1>
+        <input class="inputForUrl" id="passwordForm" type="password" style="text-align: center">
+        <input class="buttonForm" type="button" onclick="clickHandler()" value="Переход"/>
+    </div>
+</div>
+
+</body>
+</html>
