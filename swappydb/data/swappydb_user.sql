@@ -1,0 +1,13 @@
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (1, 'swappy', 'finnseefly@protonmail.com', '$2b$18$31cHWcdK0sS6NLEjn2ahReKzTJV.a58.Em5mg4IRIXF78lcWVKCKS');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (3, 'finnseefly', 'finnseefly@internet.ru', '$2a$10$7mie2D96TYZc3PVNerZjc.teQRz8PS2Qh8VutLb8NuICo3AbK3R8u');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (4, 'flymail', 'finnseefly@mail.ru', '$2a$10$7yXSAS/PXI4QhNSPUjJO9eKMbXKNudlWr/NSgR4dJCsEiZBnxgohe');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (5, 'authcheck', 'somemail@mail.ru', '$2a$10$rVWGFJovtDn4vJfOfbnTSe.BQAYp2M2bsF1l5DAOH/lVV1njw.buG');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (6, 'some', 'some@mail.ru', '$2a$10$iAblRvrHVGskXTYxleVW.e948PhgabmKX3h1aBqk3LtfGgSthOw/e');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (7, 'somesome', 'somesome@mail.ru', '$2a$10$avw.8Cywncf1ZnkwiwvBmuObWOs4F1dRDPEwrnU43tSNY9fwMx1Cu');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (8, 'testernumbaone', 'test3@gmail.com', '$2a$10$mIFdqb5.5FZCOYigw4sI2.x55W1QiBQEoApl.LkdZv9cNuBC30ram');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (9, 'testernumbatwo', 'test4@gmail.com', '$2a$10$P03ftGNoFTa2ZCUosPPYS.0r/Fzb3H5elsCDsNXlq2G6KiF7X1PjC');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (10, 'testernumbanull', 'test5@gmail.com', '$2a$10$Ord/EzUKjrA1I9pHQRl91eBFABjZL4XVP5JJJ7Z5NYJj8knDM6ZN6');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (11, 'nullptrexample', 'anotheremail@internet.ru', '$2a$10$9tOVYGA6gx4KKtc3OHaLFOP9UHSR7V1KBc.5nCifEJ/7xXeQPpREy');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (12, 'trycatchreturn', 'trycatchreturn@mail.ru', '$2a$10$qmzN701NLpu00mlLyZ3tlOjdq9ZfhS9KE.VJ3ljAYsy7oVjvu9eVu');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (13, 'trycatchreturn2', 'trycatchreturn2@mail.ru', '$2a$10$jZHSxOe.qpVOMU86.og5Xe67vJmQfN.JYHhtNfzX2avbO/t164qzu');
+insert into swappydb.user (u_id, u_login, u_email, u_hash) values (14, 'KKKK', 'k21212zx@z.com', '$2a$10$PTn4p.gk8yv3Q0qqoNc1o.vZFd7vmWQEQkTx.H2HE6tIl4moKq2fi');
