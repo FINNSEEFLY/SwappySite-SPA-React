@@ -44,9 +44,13 @@ export const LinkControlPanel = () => {
         }
         setLinksForListView(data.forListInfo)
         setDetailInfo(data.detailInfo)
+        console.log(data)
     }
 
-    const openDetailView = (index) => setSelectedItem(index)
+    const openDetailView = (index) => {
+        console.log(detailInfo[selectedItem])
+        setSelectedItem(index)
+    }
     const updateInfo = async () => {
         setSelectedItem(0);
         setDetailInfo([{stats: [], info: {

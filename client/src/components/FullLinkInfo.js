@@ -37,12 +37,12 @@ export const FullLinkInfo = ({params}) => {
             datetimeToDisable: params.detailInfo.info.datetimeToDisable,
         })
         setFlags({
-            hasPassword: form.password!==undefined,
-            hasClicksToDisable: form.clicksToDisable!==undefined,
-            hasDisabledOnDateTime: form.datetimeToDisable!==undefined,
+            hasPassword: form.password!=undefined,
+            hasClicksToDisable: form.clicksToDisable!=undefined,
+            hasDisabledOnDateTime: form.datetimeToDisable!=undefined,
             isDisabledLink: form.isDisabledLink,
         })
-        console.log( params.detailInfo.info.clicksToDisable)
+        console.log(flags)
 
 
         window.M.updateTextFields()
@@ -195,7 +195,6 @@ export const FullLinkInfo = ({params}) => {
                                 value={flags.hasPassword}
                                 checked={flags.hasPassword}
                                 onChange={changeCheckBoxHandler}
-                                key={Math.random()}
                             />
                             <span>Установить пароль</span>
                         </label>
@@ -233,6 +232,7 @@ export const FullLinkInfo = ({params}) => {
                                 type="checkbox"
                                 name='isDisabledLink'
                                 value={flags.isDisabledLink}
+                                checked={flags.isDisabledLink}
                                 onChange={changeCheckBoxHandler}
                             />
                             <span>Выключить ссылку</span>
