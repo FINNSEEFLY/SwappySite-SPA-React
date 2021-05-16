@@ -9,17 +9,8 @@ import {useHistory} from "react-router-dom";
 export const LinkControlPanel = () => {
     const history = useHistory()
     const {loading, request, error, clearError} = useHttp()
-    const [linksForListView, setLinksForListView] = useState([])
-    const [detailInfo, setDetailInfo] = useState([{
-        stats: [], info: {
-            longUrl: "",
-            shortUrl: "",
-            password: undefined,
-            clicksToDisable: undefined,
-            datetimeToDisable: undefined,
-            isDisabled: undefined
-        }
-    }])
+    const [linksForListView, setLinksForListView] = useState()
+    const [detailInfo, setDetailInfo] = useState([])
     const [selectedItem, setSelectedItem] = useState(0)
     const message = useMessage()
     const auth = useContext(AuthContext)
@@ -52,14 +43,7 @@ export const LinkControlPanel = () => {
     }
     const updateInfo = async () => {
         setSelectedItem(0);
-        setDetailInfo([{stats: [], info: {
-                longUrl: "",
-                shortUrl: "",
-                password: undefined,
-                clicksToDisable: undefined,
-                datetimeToDisable: undefined,
-                isDisabled: undefined
-            }}])
+        setDetailInfo([])
         await loadLinks();
     }
 

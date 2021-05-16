@@ -254,7 +254,7 @@ async function receiveStatistics(req, res) {
             platform: req.body.platform,
             width: req.body.screen_width,
             height: req.body.screen_height,
-            ip: req.ip === "::1" ? "::ffff:127.0.0.1" : "req.ip"
+            ip: req.ip === "::1" ? "::ffff:127.0.0.1" : req.ip
         }
         let result = await getShortLinkId(stats.shortLink)
         if (!result.result) {
@@ -455,7 +455,7 @@ async function getShortAndLongLinksAndCreationTimeByUserId(userId) {
         const data = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_AND_LONG_LINK_AND_CREATION_TIME_BY_USER_ID, [userId])
         if (data[0].length === 0) {
             result.message = "Ссылок нет"
-            return result
+            return result.result
         }
         for (let row of data[0]) {
             result.result.push({

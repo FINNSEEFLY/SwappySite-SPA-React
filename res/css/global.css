@@ -259,6 +259,10 @@ input::placeholder {
     padding: 0.1rem;
 }
 
+.oneLink:hover {
+    background: #f6f6f6;
+}
+
 .fullLinkInfo {
     overflow: auto;
     width: 100%;
@@ -388,7 +392,11 @@ body {
 }
 
 .active-link-box {
-    background: #eeeeee;
+    background: #e4e4e4;
+}
+
+.active-link-box:hover {
+    background: #e4e4e4;
 }
 
 .linkFromListViewLine {
@@ -396,6 +404,10 @@ body {
 }
 .linkFromListViewLine span {
     font-weight: bold;
+}
+
+.header-in-link-container {
+    text-align: center;
 }
 
 /* полоса прокрутки (скроллбар) */

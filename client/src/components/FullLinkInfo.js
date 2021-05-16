@@ -30,29 +30,32 @@ export const FullLinkInfo = ({params}) => {
     useEffect(() => {
         setForm({
             ...form,
-            longUrl: params.detailInfo.info.longUrl,
-            shortUrl: params.detailInfo.info.shortUrl,
-            password: params.detailInfo.info.password,
-            clicksToDisable: params.detailInfo.info.clicksToDisable,
-            datetimeToDisable: params.detailInfo.info.datetimeToDisable,
+            longUrl: params.detailInfo?.info.longUrl,
+            shortUrl: params.detailInfo?.info.shortUrl,
+            password: params.detailInfo?.info.password,
+            clicksToDisable: params.detailInfo?.info.clicksToDisable,
+            datetimeToDisable: params.detailInfo?.info.datetimeToDisable,
         })
         window.M.updateTextFields()
     }, [params])
 
-    useEffect(()=>{
+    useEffect(() => {
         window.M.updateTextFields()
-    },[])
+    }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         setFlags({
-            hasPassword: form.password!=undefined,
-            hasClicksToDisable: form.clicksToDisable!=undefined,
-            hasDisabledOnDateTime: form.datetimeToDisable!=undefined,
+            hasPassword: form.password != undefined,
+            hasClicksToDisable: form.clicksToDisable != undefined,
+            hasDisabledOnDateTime: form.datetimeToDisable != undefined,
             isDisabledLink: form.isDisabledLink,
         })
-    },[form])
+    }, [form])
 
-    useEffect(()=>window.M.updateTextFields())
+    useEffect(() => {
+        window.M.updateTextFields()
+        console.log(params)
+    })
 
 
     function changeFormHandler(event) {
@@ -109,7 +112,7 @@ export const FullLinkInfo = ({params}) => {
                 body.disabledOnDateTime = form.datetimeToDisable
             }
             if (!abort) {
-                const data = await request("/system/link/create", "POST", body,
+                const data = await request("/system/link/update", "POST", body,
                     {Authorization: `Bearer ${auth.token}`})
                 if (data.statusCode === 401) {
                     auth.logout()
@@ -121,185 +124,191 @@ export const FullLinkInfo = ({params}) => {
         }
     }
 
-    return (
-        <div className="fullLinkInfo">
-            <div className="my-table">
-                <table className="striped highlight centered">
-                    <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Переход с</th>
-                        <th>Дата и время клика</th>
-                        <th>Платформа</th>
-                        <th>Ширина экрана</th>
-                        <th>Высота экрана</th>
-                        <th>IP адрес</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {params.detailInfo?.stats.map((link, index) => {
-                        return (
-                            <tr>
-                                <td>{index + 1}</td>
-                                <td>{link.referrer === "" ? "-" : link.referrer}</td>
-                                <td>{link.datetime}</td>
-                                <td>{link.platform}</td>
-                                <td>{link.screenWidth}</td>
-                                <td>{link.screenHeight}</td>
-                                <td>{link.ipAddress}</td>
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
+    if (params.detailInfo === undefined)
+        return (
+            <div className="fullLinkInfo">
             </div>
-            <section className="EditorBox">
-                <form
-                    className="editorForm"
-                    id="createLinkForm"
-                    name="createLinkForm"
-                >
-                    <div className="input-field">
-                        <input
-                            type="url"
-                            id="longUrl"
-                            name="longUrl"
-                            className="blue-input"
-                            value={form.longUrl}
-                            onChange={changeFormHandler}
-                        />
-                        <label htmlFor="longUrl" className="labelBeforeInputUrl">
-                            Длинная ссылка (которую необходимо сократить)
-                        </label>
-                    </div>
-                    <div className="input-field">
-                        <input
-                            type="url"
-                            id="shortUrl"
-                            name="shortUrl"
-                            className="blue-input"
-                            value={form.shortUrl}
-                            onChange={changeFormHandler}
-                        />
-                        <label htmlFor="shortUrl" className="labelBeforeInputUrl">
-                            Короткая ссылка (итоговая ссылка)
-                        </label>
-                    </div>
-                    <p>
-                        <label className={flags.hasPassword ? 'blue-text' : ""}>
-                            <input
-                                id="indeterminate-checkbox"
-                                type="checkbox"
-                                name='hasPassword'
-                                value={flags.hasPassword}
-                                checked={flags.hasPassword}
-                                onChange={changeCheckBoxHandler}
-                            />
-                            <span>Установить пароль</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label className={flags.hasClicksToDisable ? 'blue-text' : ""}>
-                            <input
-                                id="indeterminate-checkbox"
-                                type="checkbox"
-                                name='hasClicksToDisable'
-                                value={flags.hasClicksToDisable}
-                                checked={flags.hasClicksToDisable}
-                                onChange={changeCheckBoxHandler}
-                            />
-                            <span>Ограничить по количеству кликов</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label className={flags.hasDisabledOnDateTime ? 'blue-text' : ""}>
-                            <input
-                                id="indeterminate-checkbox"
-                                type="checkbox"
-                                name='hasDisabledOnDateTime'
-                                value={flags.hasDisabledOnDateTime}
-                                checked={flags.hasDisabledOnDateTime}
-                                onChange={changeCheckBoxHandler}
-                            />
-                            <span>Выключить в определенный момент</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label className={flags.isDisabledLink ? 'blue-text' : ""}>
-                            <input
-                                id="indeterminate-checkbox"
-                                type="checkbox"
-                                name='isDisabledLink'
-                                value={flags.isDisabledLink}
-                                checked={flags.isDisabledLink}
-                                onChange={changeCheckBoxHandler}
-                            />
-                            <span>Выключить ссылку</span>
-                        </label>
-                    </p>
-                    <div className={flags.hasPassword ? 'input-field' : 'hide'}>
-
-                        <input
-                            type={flags.hasPassword ? "password" : "hidden"}
-                            id="password"
-                            name="password"
-                            className="blue-input"
-                            value={form.password}
-                            onChange={changeFormHandler}
-                        />
-                        <label htmlFor="password" className="labelBeforeInputUrl">
-                            {flags.hasPassword ? "Пароль" : ""}
-                        </label>
-                    </div>
-                    <div className={flags.hasClicksToDisable ? 'input-field' : 'hide'}>
-
-                        <input
-                            type={flags.hasClicksToDisable ? "number" : "hidden"}
-                            id="clickLimit"
-                            name="clickLimit"
-                            className="blue-input"
-                            value={form.clicksToDisable}
-                            onChange={changeFormHandler}
-                            min='0'
-                        />
-                        <label htmlFor="clickLimit" className="labelBeforeInputUrl">
-                            {flags.hasClicksToDisable ? "Ограничение по кликам" : ""}
-                        </label>
-                    </div>
-                    <div className={flags.hasDisabledOnDateTime ? 'input-field' : 'hide'}>
-
-                        <input
-                            type={flags.hasDisabledOnDateTime ? "text" : "hidden"}
-                            id="disabledOnDateTime"
-                            name="disabledOnDateTime"
-                            className="blue-input"
-                            value={form.datetimeToDisable}
-                            onChange={changeFormHandler}
-                            onFocus={event => event.target.type = 'datetime-local'}
-                            onBlur={event => event.target.type = flags.hasDisabledOnDateTime ? "text" : "hidden"}
-                        />
-                        <label htmlFor="disabledOnDateTime" className="labelBeforeInputUrl">
-                            {flags.hasDisabledOnDateTime ? "Отключить ссылку..." : ""}
-                        </label>
-                    </div>
-                    <button
-                        type="button"
-                        className="buttonForm"
-                        onClick={editLink}
-                        disabled={loading}
+        )
+    else
+        return (
+            <div className="fullLinkInfo">
+                <div className="my-table">
+                    <table className="striped highlight centered">
+                        <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Переход с</th>
+                            <th>Дата и время клика</th>
+                            <th>Платформа</th>
+                            <th>Ширина экрана</th>
+                            <th>Высота экрана</th>
+                            <th>IP адрес</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {params.detailInfo?.stats.map((link, index) => {
+                            return (
+                                <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{link.referrer === "" ? "-" : link.referrer}</td>
+                                    <td>{link.datetime}</td>
+                                    <td>{link.platform}</td>
+                                    <td>{link.screenWidth}</td>
+                                    <td>{link.screenHeight}</td>
+                                    <td>{link.ipAddress}</td>
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+                <section className="EditorBox">
+                    <form
+                        className="editorForm"
+                        id="createLinkForm"
+                        name="createLinkForm"
                     >
-                        Изменить ссылку
-                    </button>
-                    <button
-                        type="button"
-                        className="buttonFormRed"
-                        onClick={deleteLink}
-                        disabled={loading}
-                    >
-                        Удалить ссылку
-                    </button>
-                </form>
-            </section>
-        </div>
-    )
+                        <div className="input-field">
+                            <input
+                                type="url"
+                                id="longUrl"
+                                name="longUrl"
+                                className="blue-input"
+                                value={form.longUrl}
+                                onChange={changeFormHandler}
+                            />
+                            <label htmlFor="longUrl" className="labelBeforeInputUrl">
+                                Длинная ссылка (которую необходимо сократить)
+                            </label>
+                        </div>
+                        <div className="input-field">
+                            <input
+                                type="url"
+                                id="shortUrl"
+                                name="shortUrl"
+                                className="blue-input"
+                                value={form.shortUrl}
+                                onChange={changeFormHandler}
+                            />
+                            <label htmlFor="shortUrl" className="labelBeforeInputUrl">
+                                Короткая ссылка (итоговая ссылка)
+                            </label>
+                        </div>
+                        <p>
+                            <label className={flags.hasPassword ? 'blue-text' : ""}>
+                                <input
+                                    id="indeterminate-checkbox"
+                                    type="checkbox"
+                                    name='hasPassword'
+                                    value={flags.hasPassword}
+                                    checked={flags.hasPassword}
+                                    onChange={changeCheckBoxHandler}
+                                />
+                                <span>Установить пароль</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label className={flags.hasClicksToDisable ? 'blue-text' : ""}>
+                                <input
+                                    id="indeterminate-checkbox"
+                                    type="checkbox"
+                                    name='hasClicksToDisable'
+                                    value={flags.hasClicksToDisable}
+                                    checked={flags.hasClicksToDisable}
+                                    onChange={changeCheckBoxHandler}
+                                />
+                                <span>Ограничить по количеству кликов</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label className={flags.hasDisabledOnDateTime ? 'blue-text' : ""}>
+                                <input
+                                    id="indeterminate-checkbox"
+                                    type="checkbox"
+                                    name='hasDisabledOnDateTime'
+                                    value={flags.hasDisabledOnDateTime}
+                                    checked={flags.hasDisabledOnDateTime}
+                                    onChange={changeCheckBoxHandler}
+                                />
+                                <span>Выключить в определенный момент</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label className={flags.isDisabledLink ? 'blue-text' : ""}>
+                                <input
+                                    id="indeterminate-checkbox"
+                                    type="checkbox"
+                                    name='isDisabledLink'
+                                    value={flags.isDisabledLink}
+                                    checked={flags.isDisabledLink}
+                                    onChange={changeCheckBoxHandler}
+                                />
+                                <span>Выключить ссылку</span>
+                            </label>
+                        </p>
+                        <div className={flags.hasPassword ? 'input-field' : 'hide'}>
+
+                            <input
+                                type={flags.hasPassword ? "password" : "hidden"}
+                                id="password"
+                                name="password"
+                                className="blue-input"
+                                value={form.password}
+                                onChange={changeFormHandler}
+                            />
+                            <label htmlFor="password" className="labelBeforeInputUrl">
+                                {flags.hasPassword ? "Пароль" : ""}
+                            </label>
+                        </div>
+                        <div className={flags.hasClicksToDisable ? 'input-field' : 'hide'}>
+
+                            <input
+                                type={flags.hasClicksToDisable ? "number" : "hidden"}
+                                id="clickLimit"
+                                name="clickLimit"
+                                className="blue-input"
+                                value={form.clicksToDisable}
+                                onChange={changeFormHandler}
+                                min='0'
+                            />
+                            <label htmlFor="clickLimit" className="labelBeforeInputUrl">
+                                {flags.hasClicksToDisable ? "Ограничение по кликам" : ""}
+                            </label>
+                        </div>
+                        <div className={flags.hasDisabledOnDateTime ? 'input-field' : 'hide'}>
+
+                            <input
+                                type={flags.hasDisabledOnDateTime ? "text" : "hidden"}
+                                id="disabledOnDateTime"
+                                name="disabledOnDateTime"
+                                className="blue-input"
+                                value={form.datetimeToDisable}
+                                onChange={changeFormHandler}
+                                onFocus={event => event.target.type = 'datetime-local'}
+                                onBlur={event => event.target.type = flags.hasDisabledOnDateTime ? "text" : "hidden"}
+                            />
+                            <label htmlFor="disabledOnDateTime" className="labelBeforeInputUrl">
+                                {flags.hasDisabledOnDateTime ? "Отключить ссылку..." : ""}
+                            </label>
+                        </div>
+                        <button
+                            type="button"
+                            className="buttonForm"
+                            onClick={editLink}
+                            disabled={loading}
+                        >
+                            Изменить ссылку
+                        </button>
+                        <button
+                            type="button"
+                            className="buttonFormRed"
+                            onClick={deleteLink}
+                            disabled={loading}
+                        >
+                            Удалить ссылку
+                        </button>
+                    </form>
+                </section>
+            </div>
+        )
 }

@@ -96,9 +96,23 @@ router.post("/delete",
     async (req, res) => {
         try {
             let result = await deleteLink(req.body.shortUrl)
-            res.status(200).json({message:result.message})
+            res.status(200).json({message: result.message})
         } catch (e) {
-            res.status(500).json({message: "Внутренняя ошибка сервера при получении ссылок"})
+            res.status(500).json({message: "Внутренняя ошибка сервера при удалении сылки"})
+        }
+    }
+);
+
+// /system/link/update
+
+router.post("/update",
+    auth,
+    async (req, res) => {
+        try {
+            let result = await deleteLink(req.body.shortUrl)
+            res.status(200).json({message: result.message})
+        } catch (e) {
+            res.status(500).json({message: "Внутренняя ошибка сервера при обновлении ссылки"})
         }
     }
 );
