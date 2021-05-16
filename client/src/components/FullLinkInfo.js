@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../context/AuthContext";
 import {useMessage} from "../hooks/materialToast";
 import {useHistory} from "react-router-dom";
@@ -36,21 +36,21 @@ export const FullLinkInfo = ({params}) => {
             clicksToDisable: params.detailInfo.info.clicksToDisable,
             datetimeToDisable: params.detailInfo.info.datetimeToDisable,
         })
-        setFlags({
-            hasPassword: form.password!=undefined,
-            hasClicksToDisable: form.clicksToDisable!=undefined,
-            hasDisabledOnDateTime: form.datetimeToDisable!=undefined,
-            isDisabledLink: form.isDisabledLink,
-        })
-        console.log(flags)
-
-
         window.M.updateTextFields()
     }, [params])
 
     useEffect(()=>{
         window.M.updateTextFields()
     },[])
+
+    useEffect(()=>{
+        setFlags({
+            hasPassword: form.password!=undefined,
+            hasClicksToDisable: form.clicksToDisable!=undefined,
+            hasDisabledOnDateTime: form.datetimeToDisable!=undefined,
+            isDisabledLink: form.isDisabledLink,
+        })
+    },[form])
 
     useEffect(()=>window.M.updateTextFields())
 
@@ -72,7 +72,6 @@ export const FullLinkInfo = ({params}) => {
         }
         message(data.message)
         params.updateInfo()
-
     }
 
     async function editLink() {

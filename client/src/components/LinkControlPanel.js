@@ -35,7 +35,7 @@ export const LinkControlPanel = () => {
     }, [])
 
 
-    const loadLinks = async () => {
+    const loadLinks = useCallback(async () => {
         const data = await request("/system/link/getAllLinks", "POST", null,
             {Authorization: `Bearer ${auth.token}`})
         if (data.statusCode === 401) {
@@ -44,8 +44,7 @@ export const LinkControlPanel = () => {
         }
         setLinksForListView(data.forListInfo)
         setDetailInfo(data.detailInfo)
-        console.log(data)
-    }
+    },[detailInfo, linksForListView,selectedItem])
 
     const openDetailView = (index) => {
         console.log(detailInfo[selectedItem])
