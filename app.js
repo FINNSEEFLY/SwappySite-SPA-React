@@ -1,19 +1,19 @@
 const express = require('express')
 const config = require('config')
-const {makeRandomShortLink} = require("./models/Link");
-const hbs = require("hbs");
-const expressHbs = require("express-handlebars");
-const {routeSomeLink} = require("./models/Link");
+const {makeRandomShortLink} = require("./models/Link")
+const hbs = require("hbs")
+const expressHbs = require("express-handlebars")
+const {routeSomeLink} = require("./models/Link")
 const path = require('path')
-const {authLinkAccess} = require("./models/Link");
-const {receiveStatistics} = require("./models/Link");
+const {authLinkAccess} = require("./models/Link")
+const {receiveStatistics} = require("./models/Link")
 
 const app = express()
 const PORT = config.get('port') || 80
 
-app.set("view engine", "hbs");
-app.set("views", "res/views");
-hbs.registerPartials(__dirname + "/res/views/partials");
+app.set("view engine", "hbs")
+app.set("views", "res/views")
+hbs.registerPartials(__dirname + "/res/views/partials")
 app.engine("hbs", expressHbs(
     {
         layoutsDir: "res/views/patterns",
@@ -53,12 +53,10 @@ app.post("/system/sendStatsInfo", receiveStatistics);
 app.post("/system/sendPasswordToRedirect", authLinkAccess)
 
 app.use('/', express.static(path.join(__dirname, 'client', 'build')))
-app.get('(/system/register)|(/system/login/)|(/system/myLinks)|(/system/createLinks)', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-})
+
 
 // Managed Links Routing
-app.use(routeSomeLink);
+app.use(routeSomeLink)
 
 
-start();
+start()
