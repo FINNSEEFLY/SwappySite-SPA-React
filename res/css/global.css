@@ -44,10 +44,6 @@ nav {
 }
 
 
-.redButton {
-    background: #fa6565;
-    color: white;
-}
 
 .greenButton {
     background: #1ec770;
@@ -174,12 +170,30 @@ footer {
     outline: none;
 }
 
+.editorForm {
+    padding: 0 2.5rem;
+    display: flex;
+    flex-direction: column;
+    border-color: #989898;
+    width: 100%;
+    outline: none;
+}
+
 .AuthBox {
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
     padding: 2em 0;
+}
+
+.EditorBox {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2em 0 0 0;
+    width: 100%;
 }
 
 input::placeholder {
@@ -204,12 +218,12 @@ input::placeholder {
 
 .controlPanel {
     width: 100%;
-    height: 50rem;
+    height: calc(80vh);
     border: solid #8d8d8d 2px;
     margin: 1.5rem 1.5rem 3rem 1.5rem;
     border-radius: 0.3rem;
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 3fr 6fr;
     overflow: hidden;
 }
 
@@ -220,6 +234,16 @@ input::placeholder {
     height: 100%;
     border-right: solid #8d8d8d 2px;
     padding: 0 0.2rem 0.2rem 0;
+    font-size: 0.85em;
+}
+
+.linkViewContainer {
+    overflow: auto;
+    display: grid;
+    grid-template-rows: 95fr 5fr;
+    border-color: gray;
+    border-style: solid;
+    border-width: 0 2px 0 0;
 }
 
 .oneLink {
@@ -229,6 +253,7 @@ input::placeholder {
     border-bottom: solid #8d8d8d 1px;
     width: 100%;
     overflow: hidden;
+    cursor: pointer;
 }
 .oneLink > div {
     padding: 0.1rem;
@@ -276,13 +301,48 @@ input::placeholder {
     transition-timing-function: ease;
 }
 
+.buttonFormRed {
+    display: inline-block;
+    padding: 0.5em;
+    font-size: 1em;
+    width: 100%;
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 0.2rem;
+    border-color: #ff0000;
+    background: #ff0000;
+    color: white;
+    font-weight: bold;
+    transition-property: background-color, color;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: ease;
+}
+
+.redButton {
+    background: #fa6565;
+    color: white;
+}
+
+.buttonUpdate {
+    padding: 0.5rem;
+    border-color: gray;
+    border-style: solid;
+    border-width: 2px 0 0 0;
+}
+
 .buttonMainForm:hover, .buttonForm:hover {
     background-color: white;
     color: #0076ff;
     cursor: pointer;
 }
 
-.buttonMainForm:disabled, .buttonForm:disabled {
+.buttonFormRed:hover {
+    background-color: white;
+    color: #ff0000;
+    cursor: pointer;
+}
+
+.buttonMainForm:disabled, .buttonForm:disabled .buttonFormRed {
     background-color: #c1c1c1;
     border-color: #c1c1c1;
     color: #7a7a7a;
@@ -291,6 +351,14 @@ input::placeholder {
 
 .inputForm *:focus {
     outline: none;
+}
+
+.editorForm *:focus {
+    outline: none;
+}
+
+.editorForm button {
+    margin: 0.4em;
 }
 
 .labelBeforeInputUrl {
@@ -307,6 +375,27 @@ body {
     font-family: "Open Sans Bold", serif;
     font-weight: bold;
     color: black;
+}
+
+.my-table {
+    display: block;
+    height: 50%;
+    overflow-x: hidden;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 15px;
+    border-color: #c4c4c4;
+}
+
+.active-link-box {
+    background: #eeeeee;
+}
+
+.linkFromListViewLine {
+    white-space: nowrap;
+}
+.linkFromListViewLine span {
+    font-weight: bold;
 }
 
 /* полоса прокрутки (скроллбар) */

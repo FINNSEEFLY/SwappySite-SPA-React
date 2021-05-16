@@ -1,3 +1,4 @@
+const moment = require("moment");
 const {getRandomString} = require("../utils/randomStringMaker")
 const {mySqlConnectionPool} = require("./MySqlPull")
 const {getDateTimeNow} = require("../utils/datetimeNow")
@@ -6,9 +7,9 @@ const bcrypt = require('bcryptjs')
 const {compareMySqlDateAndNow} = require("../utils/compareMySqlDateAndNow");
 const {convertUTCTimeToMySqlDateTime} = require("../utils/convertUTCTimeToMySqlDateTime");
 
-const REQUEST_GET_SHORT_LINK_ID = `SELECT sl_id
-                                   FROM swappydb.short_link
-                                   WHERE sl_short_url = ?`
+const REQUEST_GET_SHORT_LINK_ID_BY_NAME = `SELECT sl_id
+                                           FROM swappydb.short_link
+                                           WHERE sl_short_url = ?`
 
 const REQUEST_GET_LONG_LINKS_BY_SHORT_LINK_ID = 'SELECT ll_long_url FROM swappydb.long_link WHERE ll_sl_id = ?'
 
@@ -43,6 +44,28 @@ const REQUEST_UPDATE_RULE_PARAM = `UPDATE swappydb.rules
                                    WHERE r_id = ?`
 
 
+const REQUEST_GET_SHORT_LINKS_ID_BY_USER_ID = `SELECT sl_id
+                                               FROM swappydb.short_link
+                                               WHERE sl_user_id = ?`
+
+const REQUEST_GET_STATS_BY_SHORT_LINK_ID = `SELECT s_url_referrer,
+                                                   s_date_time,
+                                                   s_platform,
+                                                   s_screen_width,
+                                                   s_screen_height,
+                                                   s_ip_address
+                                            FROM swappydb.stats
+                                            WHERE s_sl_id = ?`
+
+const REQUEST_GET_SHORT_AND_LONG_LINK_AND_CREATION_TIME_BY_USER_ID = `SELECT sl_short_url, ll_long_url, sl_creation_time
+                                                                      FROM swappydb.short_link
+                                                                               LEFT JOIN swappydb.long_link ll on short_link.sl_id = ll.ll_sl_id
+                                                                      WHERE sl_user_id = ?`
+
+const REQUEST_DELETE_SHORT_LINK_BY_URL = `DELETE
+                                          FROM swappydb.short_link
+                                          WHERE sl_short_url = ?`
+
 async function makeRandomShortLink(req, res) {
     try {
         const longLink = req.body.link
@@ -60,7 +83,7 @@ async function makeRandomShortLink(req, res) {
 async function getShortLinkId(shortLink) {
     try {
         let result = {result: null, message: ""}
-        const data = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_LINK_ID, [shortLink])
+        const data = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_LINK_ID_BY_NAME, [shortLink])
         if (data[0].length === 0) {
             result.message = "Ссылка не найдена"
             return result
@@ -180,12 +203,9 @@ async function routeSomeLink(req, res) {
                 layout: false,
                 next_link: longLinks.pop().link,
             })
-            return
         } else {
             res.render("passRedirect", {layout: false, title: "Введите пароль"})
-            return
         }
-/*        res.status(200).json({message: "В разработке =)"})*/
     } catch (e) {
         return res.status(500).json({message: `Внутренняя ошибка сервера при поиске ссылки ${e.stackTrace}`})
     }
@@ -230,11 +250,11 @@ async function receiveStatistics(req, res) {
         const stats = {
             shortLink: req.body.url_from.replace("/", ""),
             dateTime: getDateTimeNow(),
-            referer: req.body.url_referrer,
+            referrer: req.body.url_referrer,
             platform: req.body.platform,
             width: req.body.screen_width,
             height: req.body.screen_height,
-            ip: req.ip
+            ip: req.ip === "::1" ? "::ffff:127.0.0.1" : "req.ip"
         }
         let result = await getShortLinkId(stats.shortLink)
         if (!result.result) {
@@ -253,7 +273,7 @@ async function receiveStatistics(req, res) {
 async function insertStats(stats) {
     try {
         return (await mySqlConnectionPool.execute(REQUEST_INSERT_STATS,
-            [stats.shortLinkId, stats.dateTime, stats.referer, stats.platform,
+            [stats.shortLinkId, stats.dateTime, stats.referrer, stats.platform,
                 stats.width, stats.height, stats.ip]))[0].insertId
     } catch (e) {
         console.log(`Error in (insertStats: stats=${JSON.stringify(stats)};\nMessage:${e.message}`)
@@ -335,6 +355,138 @@ async function insertLinkAndRules(shortLink, longLink, userId, rules) {
 
 }
 
+
+async function getStatsForLinkByShortLinkId(shortLinkId) {
+    try {
+        let result = {result: [], message: ""}
+        const statsFromDb = await mySqlConnectionPool.execute(REQUEST_GET_STATS_BY_SHORT_LINK_ID, [shortLinkId])
+        if (statsFromDb[0].length === 0) {
+            result.message = "Статистики нет"
+            return result
+        }
+        let data = statsFromDb[0];
+        for (let statLine of data) {
+            result.result.push({
+                referrer: statLine.s_url_referrer,
+                datetime: moment(statLine.s_date_time).format("DD-MM-YYYY HH:mm:ss"),
+                platform: statLine.s_platform,
+                screenWidth: statLine.s_screen_width,
+                screenHeight: statLine.s_screen_height,
+                ipAddress: String(statLine.s_ip_address).match(/::ffff:(([0-9]{0,3}\.){3}[0-9]{0,3})/)[1]
+            })
+        }
+        return result
+    } catch (e) {
+        console.log(`Error in (getStatsForLinkByShortLinkId: shortLinkId=${shortLinkId}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+async function getStatsForAllLinksByUserId(userId) {
+    try {
+        let result = {result: [], message: ""}
+        const ShortLinksIDFromDB = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_LINKS_ID_BY_USER_ID, [userId])
+        if (ShortLinksIDFromDB[0].length === 0) {
+            result.message = "Ссылок нет"
+            return result.result
+        }
+        for (let shortLinkId of ShortLinksIDFromDB[0]) {
+            result.result.push((await getStatsForLinkByShortLinkId(shortLinkId.sl_id)).result)
+        }
+        return result.result
+    } catch (e) {
+        console.log(`Error in (getStatsForAllLinksByUserId: userId=${userId}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+async function getLinkRulesByShortLinkId(shortLinkId) {
+    try {
+        let result = {result: {}, message: ""}
+        const rules = await mySqlConnectionPool.execute(REQUEST_GET_ACTIVE_RULES_BY_SHORT_LINK_ID, [shortLinkId])
+        if (rules[0].length === 0) {
+            result.message = "Правил нет"
+            return result
+        }
+        for (let rule of rules[0]) {
+            switch (rule.rd_name) {
+                case "password-required":
+                    result.result.password = true
+                    break;
+                case "disabled":
+                    result.result.disabled = rule.r_param
+                    break;
+                case "will-be-disabled-on-datetime":
+                    result.result.datetimeToDisable = rule.r_param
+                    break;
+                case "clicks-before-disabling":
+                    result.result.clicksToDisable = rule.r_param
+                    break;
+            }
+        }
+        return result
+    } catch (e) {
+        console.log(`Error in (getLinkRulesByShortLinkId: shortLinkId=${shortLinkId}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+async function getLinkRulesForAllLinksByUserId(userId) {
+    try {
+        let result = {result: [], message: ""}
+        const ShortLinksIDFromDB = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_LINKS_ID_BY_USER_ID, [userId])
+        if (ShortLinksIDFromDB[0].length === 0) {
+            result.message = "Ссылок нет"
+            return result.result
+        }
+        for (let shortLinkId of ShortLinksIDFromDB[0]) {
+            result.result.push((await getLinkRulesByShortLinkId(shortLinkId.sl_id)).result)
+        }
+        return result.result
+    } catch (e) {
+        console.log(`Error in (getLinkRulesForAllLinksByUserId: userId=${userId}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+async function getShortAndLongLinksAndCreationTimeByUserId(userId) {
+    try {
+        let result = {result: [], message: ""}
+        const data = await mySqlConnectionPool.execute(REQUEST_GET_SHORT_AND_LONG_LINK_AND_CREATION_TIME_BY_USER_ID, [userId])
+        if (data[0].length === 0) {
+            result.message = "Ссылок нет"
+            return result
+        }
+        for (let row of data[0]) {
+            result.result.push({
+                shortUrl: row.sl_short_url,
+                longUrl: row.ll_long_url,
+                creationTime: moment(row.sl_creation_time).format("DD-MM-YYYY HH:mm:ss"),
+            })
+        }
+        return result.result
+    } catch (e) {
+        console.log(`Error in (getShortAndLongLinksAndCreationTimeByUserId: userId=${userId}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+async function deleteLink(shortLink) {
+    try {
+        let result = {result: [], message: ""}
+        await mySqlConnectionPool.execute(REQUEST_DELETE_SHORT_LINK_BY_URL, [shortLink])
+        result.message = "Ссылка удалена"
+        return result
+    } catch (e) {
+        console.log(`Error in (deleteLink: shortLink=${shortLink}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+module.exports.deleteLink = deleteLink
+module.exports.getShortAndLongLinksAndCreationTimeByUserId = getShortAndLongLinksAndCreationTimeByUserId
+module.exports.getLinkRulesForAllLinksByUserId = getLinkRulesForAllLinksByUserId
+module.exports.getStatsForAllLinksByUserId = getStatsForAllLinksByUserId
 module.exports.authLinkAccess = authLinkAccess
 module.exports.insertLinkAndRules = insertLinkAndRules
 module.exports.insertLink = insertLink

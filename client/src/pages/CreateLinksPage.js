@@ -82,6 +82,10 @@ export const CreateLinksPage = () => {
         clearError()
     }, [error, message, clearError])
 
+    useEffect(()=>{
+        window.M.updateTextFields()
+    },[])
+
 
     function changeFormHandler(event) {
         setForm({...form, [event.target.name]: event.target.value})
@@ -112,7 +116,7 @@ export const CreateLinksPage = () => {
                             value={form.longUrl}
                             onChange={changeFormHandler}
                         />
-                        <label htmlFor="" className="labelBeforeInputUrl">
+                        <label htmlFor="longUrl" className="labelBeforeInputUrl">
                             Длинная ссылка (которую необходимо сократить)
                         </label>
                     </div>
@@ -122,10 +126,10 @@ export const CreateLinksPage = () => {
                             id="shortUrl"
                             name="shortUrl"
                             className="blue-input"
-                            value={form.shortLink}
+                            value={form.shortUrl}
                             onChange={changeFormHandler}
                         />
-                        <label htmlFor="" className="labelBeforeInputUrl">
+                        <label htmlFor="shortUrl" className="labelBeforeInputUrl">
                             Короткая ссылка (итоговая ссылка)
                         </label>
                     </div>
@@ -175,7 +179,7 @@ export const CreateLinksPage = () => {
                             value={form.password}
                             onChange={changeFormHandler}
                         />
-                        <label htmlFor="" className="labelBeforeInputUrl">
+                        <label htmlFor="password" className="labelBeforeInputUrl">
                             {flags.hasPassword ? "Пароль" : ""}
                         </label>
                     </div>
@@ -190,7 +194,7 @@ export const CreateLinksPage = () => {
                             onChange={changeFormHandler}
                             min='0'
                         />
-                        <label htmlFor="" className="labelBeforeInputUrl">
+                        <label htmlFor="clickLimit" className="labelBeforeInputUrl">
                             {flags.hasClicksLimit ? "Ограничение по кликам" : ""}
                         </label>
                     </div>
@@ -206,7 +210,7 @@ export const CreateLinksPage = () => {
                             onFocus={event => event.target.type = 'datetime-local'}
                             onBlur={event => event.target.type = flags.hasDisabledOnDateTime ? "text" : "hidden"}
                         />
-                        <label htmlFor="" className="labelBeforeInputUrl">
+                        <label htmlFor="disabledOnDateTime" className="labelBeforeInputUrl">
                             {flags.hasDisabledOnDateTime ? "Отключить ссылку..." : ""}
                         </label>
                     </div>
