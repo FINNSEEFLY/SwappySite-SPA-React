@@ -15,7 +15,7 @@ export const useHttp = () => {
             const response = await fetch(url, {method, body, headers})
             const data = await response.json()
 
-            if (!response.ok && response.status!==401) {
+            if (!response.ok && response.status !== 401) {
                 throw new Error(data.message || 'Ошибка отправки данных на сервер')
             }
 

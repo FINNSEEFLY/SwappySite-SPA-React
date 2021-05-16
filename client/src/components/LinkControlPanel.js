@@ -8,7 +8,7 @@ import {useHistory} from "react-router-dom";
 
 export const LinkControlPanel = () => {
     const history = useHistory()
-    const {loading, request, error, clearError} = useHttp()
+    const {request, error, clearError} = useHttp()
     const [linksForListView, setLinksForListView] = useState()
     const [detailInfo, setDetailInfo] = useState([])
     const [selectedItem, setSelectedItem] = useState(0)
@@ -35,10 +35,9 @@ export const LinkControlPanel = () => {
         }
         setLinksForListView(data.forListInfo)
         setDetailInfo(data.detailInfo)
-    },[detailInfo, linksForListView,selectedItem])
+    }, [detailInfo, linksForListView, selectedItem])
 
     const openDetailView = (index) => {
-        console.log(detailInfo[selectedItem])
         setSelectedItem(index)
     }
     const updateInfo = async () => {
@@ -57,7 +56,7 @@ export const LinkControlPanel = () => {
                     updateInfo
                 }}
             />
-            <FullLinkInfo params={{detailInfo: detailInfo[selectedItem],updateInfo}}/>
+            <FullLinkInfo params={{detailInfo: detailInfo[selectedItem], updateInfo}}/>
         </div>
     )
 }

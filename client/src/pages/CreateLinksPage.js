@@ -29,7 +29,6 @@ export const CreateLinksPage = () => {
     }, [error, message, clearError])
 
 
-
     async function createShortLinkButtonClickHandler() {
         try {
             let body = {}
@@ -46,19 +45,19 @@ export const CreateLinksPage = () => {
             } else {
                 body.shortUrl = form.shortUrl
             }
-            if (flags.hasPassword && form.password==='') {
+            if (flags.hasPassword && form.password === '') {
                 message("Заполните пароль")
                 abort = true
             } else if (flags.hasPassword) {
                 body.password = form.password
             }
-            if (flags.hasClicksLimit && form.clickLimit<0) {
+            if (flags.hasClicksLimit && form.clickLimit < 0) {
                 message('Ограничение кликов должно быть положительным')
                 abort = true
             } else if (flags.hasClicksLimit) {
                 body.clickLimit = form.clickLimit
             }
-            if (flags.hasDisabledOnDateTime && form.disabledOnDateTime==='') {
+            if (flags.hasDisabledOnDateTime && form.disabledOnDateTime === '') {
                 message('Заполните дату и время')
                 abort = true
             } else if (flags.hasDisabledOnDateTime) {
@@ -67,7 +66,7 @@ export const CreateLinksPage = () => {
             if (!abort) {
                 const data = await request("/system/link/create", "POST", body,
                     {Authorization: `Bearer ${auth.token}`})
-                if (data.statusCode ===401) {
+                if (data.statusCode === 401) {
                     auth.logout()
                     history.push("/system/login")
                 }
@@ -82,9 +81,9 @@ export const CreateLinksPage = () => {
         clearError()
     }, [error, message, clearError])
 
-    useEffect(()=>{
+    useEffect(() => {
         window.M.updateTextFields()
-    },[])
+    }, [])
 
 
     function changeFormHandler(event) {

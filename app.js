@@ -50,7 +50,7 @@ app.post("/system/randomShortLinkModel", makeRandomShortLink)
 app.post("/system/sendStatsInfo", receiveStatistics);
 
 // Manage Pass Redirect
-app.post("/system/sendPasswordToRedirect",authLinkAccess)
+app.post("/system/sendPasswordToRedirect", authLinkAccess)
 
 app.use('/', express.static(path.join(__dirname, 'client', 'build')))
 app.get('(/system/register)|(/system/login/)|(/system/myLinks)|(/system/createLinks)', (req, res) => {

@@ -5,7 +5,7 @@ export const MyLinksPage = () => {
     document.title = 'Мои ссылки';
     return (
         <article className="container">
-         <LinkControlPanel/>
+            <LinkControlPanel/>
         </article>
     )
 }

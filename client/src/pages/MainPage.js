@@ -7,7 +7,7 @@ import {useEffect} from 'react'
 export const MainPage = () => {
     const [longLink, setLongLink] = useState('')
     const [shortLink, setShortLink] = useState('')
-    const {loading, request, error, clearError} = useHttp()
+    const {request, error, clearError} = useHttp()
     const message = useMessage()
     document.title = 'Сокращатель Swappy';
     useEffect(() => {
@@ -15,23 +15,22 @@ export const MainPage = () => {
         clearError()
     }, [error, message, clearError])
 
-    const copyButtonClickHandler = async event=> {
+    const copyButtonClickHandler = async () => {
         if (shortLink) {
             try {
                 await navigator.clipboard.writeText(`${shortLink}`)
-            }
-            catch (e){
+            } catch (e) {
                 console.log('Something went wrong', e);
             }
         }
     }
 
-    const getShortLinkButtonClick = async event => {
+    const getShortLinkButtonClick = async () => {
         try {
             const data = await request('/system/randomShortLinkModel', "POST", {link: longLink})
             setShortLink(`http://swappy.site/${data.message}`)
+        } catch (e) {
         }
-        catch (e) {}
 
     }
 
@@ -64,7 +63,7 @@ export const MainPage = () => {
                             id="inputUrl"
                             name="urlForCut"
                             className="inputForUrl blue-input"
-                            onChange={e=>setLongLink(e.target.value)}
+                            onChange={e => setLongLink(e.target.value)}
                             required
                             placeholder="https://some.long.link.com/Some/Kind/Of/Long/Long/Url"
                         />

@@ -1,4 +1,4 @@
-function getRandomString (numOfLetters) {
+function getRandomString(numOfLetters) {
     let text = "";
     const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

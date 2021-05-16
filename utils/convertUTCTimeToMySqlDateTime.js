@@ -1,6 +1,6 @@
 const moment = require("moment");
 
-function convertUTCTimeToMySqlDateTime (utcString) {
+function convertUTCTimeToMySqlDateTime(utcString) {
     let date = new Date(utcString)
     return moment(date).format('YYYY-MM-DD HH:mm:ss');
 }

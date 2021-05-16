@@ -17,9 +17,9 @@ router.post(
         check('password', 'Пароль должен состоять как минимум из 6 символов').isLength({min: 6}),
         check('login', "Логин должен может содержать только латинские буквы символ тире и знак подчеркивания").custom(
             value => {
-            const regExp = /^[a-zA-Z0-9_-]+$/
-            return regExp.test(value)
-        }
+                const regExp = /^[a-zA-Z0-9_-]+$/
+                return regExp.test(value)
+            }
         )
     ],
     async (req, res) => {
@@ -28,9 +28,9 @@ router.post(
 
             if (!errors.isEmpty()) {
                 let errList = "Ошибка при регистрации"
-                    for (let err of errors.errors) {
-                        errList = errList + '<br/>'+ err.msg
-                    }
+                for (let err of errors.errors) {
+                    errList = errList + '<br/>' + err.msg
+                }
                 return res.status(400).json({
                     errors: errors.array(),
                     message: errList

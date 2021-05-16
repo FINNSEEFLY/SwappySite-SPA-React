@@ -66,6 +66,18 @@ const REQUEST_DELETE_SHORT_LINK_BY_URL = `DELETE
                                           FROM swappydb.short_link
                                           WHERE sl_short_url = ?`
 
+const REQUEST_UPDATE_SHORT_LINK_BY_OLD_SHORT_LINK = `UPDATE swappydb.short_link
+                                                     SET sl_short_url = ?
+                                                     WHERE sl_short_url = ?`
+
+const REQUEST_UPDATE_LONG_LINK_BY_SHORT_LINK_ID = `UPDATE swappydb.long_link
+                                                   SET ll_long_url = ?
+                                                   WHERE ll_sl_id = ?`
+
+const REQUEST_DELETE_ALL_RULES_BY_LINK_ID = `DELETE
+                                             FROM swappydb.rules
+                                             WHERE r_short_url_id = ?`
+
 async function makeRandomShortLink(req, res) {
     try {
         const longLink = req.body.link
@@ -196,6 +208,9 @@ async function routeSomeLink(req, res) {
                 case 'password-required':
                     passwordRequired = true
                     break
+                case 'disabled':
+                    res.redirect("/")
+                    return
             }
         }
         if (!passwordRequired) {
@@ -414,7 +429,7 @@ async function getLinkRulesByShortLinkId(shortLinkId) {
                     result.result.password = true
                     break;
                 case "disabled":
-                    result.result.disabled = rule.r_param
+                    result.result.isDisabled = true
                     break;
                 case "will-be-disabled-on-datetime":
                     result.result.datetimeToDisable = rule.r_param
@@ -483,6 +498,81 @@ async function deleteLink(shortLink) {
     }
 }
 
+async function updateLink(oldShortLink, shortLink, longLink, rules) {
+    try {
+        let result = {result: {}, message: ""}
+        if (oldShortLink !== shortLink) {
+            try {
+                await mySqlConnectionPool.execute(REQUEST_UPDATE_SHORT_LINK_BY_OLD_SHORT_LINK, [shortLink, oldShortLink])
+            } catch (e) {
+                console.log(`Error in (updateShortLink: oldShortLink=${oldShortLink}, shortLink=${shortLink}\nMessage:${e.message}`)
+                throw e
+            }
+        }
+        let shortLinkId = (await getShortLinkId(shortLink)).result
+        try {
+            await mySqlConnectionPool.execute(REQUEST_DELETE_ALL_RULES_BY_LINK_ID, [shortLinkId])
+        } catch (e) {
+            console.log(`Error in (deleteRules: shortLinkId=${shortLinkId}\nMessage:${e.message}`)
+            throw e
+        }
+        try {
+            await mySqlConnectionPool.execute(REQUEST_UPDATE_LONG_LINK_BY_SHORT_LINK_ID, [longLink, shortLinkId])
+        } catch (e) {
+            console.log(`Error in (updateLongLink: longLink=${longLink}, shortLinkId=${shortLinkId}\nMessage:${e.message}`)
+            throw e
+        }
+        // REQUEST_UPDATE_LONG_LINK_BY_SHORT_LINK_ID
+        if (rules.password !== undefined) {
+            let data = await getRuleIdByName('password-required')
+            if (data.result === null) {
+                throw new Error("Не удалось добавить пароль")
+            }
+            data = await insertRule(shortLinkId, rules.password, data.result)
+            if (data.result === null) {
+                throw new Error("Не удалось добавить пароль")
+            }
+        }
+        if (rules.clicksToDisable !== undefined) {
+            let data = await getRuleIdByName('clicks-before-disabling')
+            if (data.result === null) {
+                throw new Error("Не удалось добавить ограничение по кликам")
+            }
+            data = await insertRule(shortLinkId, rules.clicksToDisable, data.result)
+            if (data.result === null) {
+                throw new Error("Не удалось добавить ограничение по кликам")
+            }
+        }
+        if (rules.datetimeToDisable !== undefined) {
+            let data = await getRuleIdByName('will-be-disabled-on-datetime')
+            if (data.result === null) {
+                throw new Error("Не удалось добавить ограничение по времени")
+            }
+            let disabledOnDateTime = convertUTCTimeToMySqlDateTime(rules.datetimeToDisable)
+            data = await insertRule(shortLinkId, disabledOnDateTime, data.result)
+            if (data.result === null) {
+                throw new Error("Не удалось добавить ограничение по времени")
+            }
+        }
+        if (rules.isDisabledLink === true) {
+            let data = await getRuleIdByName('disabled')
+            if (data.result === null) {
+                throw new Error("Не удалось выключить ссылку")
+            }
+            data = await insertRule(shortLinkId, "", data.result)
+            if (data.result === null) {
+                throw new Error("Не удалось выключить ссылку")
+            }
+        }
+        result.message = "Ссылка обновлена"
+        return result
+    } catch (e) {
+        console.log(`Error in (updateLink: oldShortLink=${oldShortLink}, shortLink=${shortLink}, longLink=${longLink}, rules=${rules}\nMessage:${e.message}`)
+        throw e
+    }
+}
+
+module.exports.updateLink = updateLink
 module.exports.deleteLink = deleteLink
 module.exports.getShortAndLongLinksAndCreationTimeByUserId = getShortAndLongLinksAndCreationTimeByUserId
 module.exports.getLinkRulesForAllLinksByUserId = getLinkRulesForAllLinksByUserId

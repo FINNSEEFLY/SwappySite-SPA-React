@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../context/AuthContext";
 import {useMessage} from "../hooks/materialToast";
 import {useHistory} from "react-router-dom";
@@ -36,6 +36,12 @@ export const FullLinkInfo = ({params}) => {
             clicksToDisable: params.detailInfo?.info.clicksToDisable,
             datetimeToDisable: params.detailInfo?.info.datetimeToDisable,
         })
+        setFlags({
+            hasPassword: params.detailInfo?.info.password !== undefined,
+            hasClicksToDisable: params.detailInfo?.info.clicksToDisable !== undefined,
+            hasDisabledOnDateTime: params.detailInfo?.info.datetimeToDisable !== undefined,
+            isDisabledLink: params.detailInfo?.info.isDisabled,
+        })
         window.M.updateTextFields()
     }, [params])
 
@@ -43,18 +49,9 @@ export const FullLinkInfo = ({params}) => {
         window.M.updateTextFields()
     }, [])
 
-    useEffect(() => {
-        setFlags({
-            hasPassword: form.password != undefined,
-            hasClicksToDisable: form.clicksToDisable != undefined,
-            hasDisabledOnDateTime: form.datetimeToDisable != undefined,
-            isDisabledLink: form.isDisabledLink,
-        })
-    }, [form])
 
     useEffect(() => {
         window.M.updateTextFields()
-        console.log(params)
     })
 
 
@@ -74,7 +71,7 @@ export const FullLinkInfo = ({params}) => {
             history.push("/system/login")
         }
         message(data.message)
-        params.updateInfo()
+        await params.updateInfo()
     }
 
     async function editLink() {
@@ -103,15 +100,18 @@ export const FullLinkInfo = ({params}) => {
                 message('Ограничение кликов должно быть положительным')
                 abort = true
             } else if (flags.hasClicksToDisable) {
-                body.clickLimit = form.clicksToDisable
+                body.clicksToDisable = form.clicksToDisable
             }
             if (flags.hasDisabledOnDateTime && form.datetimeToDisable === '') {
                 message('Заполните дату и время')
                 abort = true
             } else if (flags.hasDisabledOnDateTime) {
-                body.disabledOnDateTime = form.datetimeToDisable
+                body.datetimeToDisable = form.datetimeToDisable
             }
+            body.isDisabledLink = flags.isDisabledLink
+            body.oldShortUrl = params.detailInfo?.info.shortUrl
             if (!abort) {
+                console.log(body)
                 const data = await request("/system/link/update", "POST", body,
                     {Authorization: `Bearer ${auth.token}`})
                 if (data.statusCode === 401) {
@@ -119,6 +119,7 @@ export const FullLinkInfo = ({params}) => {
                     history.push("/system/login")
                 }
                 message(data.message)
+                await params.updateInfo()
             }
         } catch (e) {
         }
@@ -264,14 +265,14 @@ export const FullLinkInfo = ({params}) => {
 
                             <input
                                 type={flags.hasClicksToDisable ? "number" : "hidden"}
-                                id="clickLimit"
-                                name="clickLimit"
+                                id="clicksToDisable"
+                                name="clicksToDisable"
                                 className="blue-input"
                                 value={form.clicksToDisable}
                                 onChange={changeFormHandler}
                                 min='0'
                             />
-                            <label htmlFor="clickLimit" className="labelBeforeInputUrl">
+                            <label htmlFor="clicksToDisable" className="labelBeforeInputUrl">
                                 {flags.hasClicksToDisable ? "Ограничение по кликам" : ""}
                             </label>
                         </div>
@@ -279,15 +280,15 @@ export const FullLinkInfo = ({params}) => {
 
                             <input
                                 type={flags.hasDisabledOnDateTime ? "text" : "hidden"}
-                                id="disabledOnDateTime"
-                                name="disabledOnDateTime"
+                                id="datetimeToDisable"
+                                name="datetimeToDisable"
                                 className="blue-input"
                                 value={form.datetimeToDisable}
                                 onChange={changeFormHandler}
                                 onFocus={event => event.target.type = 'datetime-local'}
                                 onBlur={event => event.target.type = flags.hasDisabledOnDateTime ? "text" : "hidden"}
                             />
-                            <label htmlFor="disabledOnDateTime" className="labelBeforeInputUrl">
+                            <label htmlFor="datetimeToDisable" className="labelBeforeInputUrl">
                                 {flags.hasDisabledOnDateTime ? "Отключить ссылку..." : ""}
                             </label>
                         </div>
