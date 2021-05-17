@@ -254,6 +254,9 @@ input::placeholder {
     width: 100%;
     overflow: hidden;
     cursor: pointer;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
 }
 .oneLink > div {
     padding: 0.1rem;
