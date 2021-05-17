@@ -86,6 +86,11 @@ export const CreateLinksPage = () => {
     }, [])
 
 
+    useEffect(() => {
+        window.M.updateTextFields()
+    })
+
+
     function changeFormHandler(event) {
         setForm({...form, [event.target.name]: event.target.value})
     }
